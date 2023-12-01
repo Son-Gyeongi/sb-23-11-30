@@ -1,0 +1,5 @@
+server:
+  port: 8090
+spring:
+  datasource:
+    url: jdbc:h2:./rest2023_dev;MODE=MYSQL
