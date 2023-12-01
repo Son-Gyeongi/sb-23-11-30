@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -39,5 +40,9 @@ public class ArticleService {
     public void modify(Article article, String title, String body) {
         article.setTitle(title);
         article.setBody(body);
+    }
+
+    public List<Article> findAll() {
+        return articleRepository.findAll();
     }
 }
