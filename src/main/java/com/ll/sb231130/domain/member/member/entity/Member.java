@@ -17,4 +17,9 @@ public class Member extends BaseEntity {
     private String password;
     private String email;
     private String nickname;
+
+    // name을 어떤 걸로 할지 여기서 정한다.
+    public String getName() {
+        return nickname;
+    }
 }
