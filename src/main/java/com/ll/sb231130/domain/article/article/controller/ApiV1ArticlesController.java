@@ -39,6 +39,8 @@ public class ApiV1ArticlesController {
     @GetMapping("")
     public RsData<GetArticlesResponseBody> getArticles() {
         // 모든 엔드포인트의 응답본문에 일정한 양식을 넣어두자.
-        return RsData.of("200", "성공", new GetArticlesResponseBody(articleService.findAllByOrderByIdDesc()));
+        return RsData.of("200",
+                "성공",
+                new GetArticlesResponseBody(articleService.findAllByOrderByIdDesc()));
     }
 }
