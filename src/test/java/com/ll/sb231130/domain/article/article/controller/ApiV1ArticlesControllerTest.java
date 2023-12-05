@@ -54,4 +54,32 @@ class ApiV1ArticlesControllerTest {
         "title":"제목10","body":"내용10"},
          */
     }
+
+    @Test
+    @DisplayName("GET /api/v1/articles/1")
+    void t2() throws Exception {
+        // WHEN
+        ResultActions resultActions = mvc
+                .perform(get("/api/v1/articles/1"))
+                .andDo(print());
+
+        // THEN
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(handler().handlerType(ApiV1ArticlesController.class))
+                .andExpect(handler().methodName("getArticle"))
+                .andExpect(jsonPath("$.data.item.id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.item.createDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.item.modifyDate", matchesPattern(DATE_PATTERN)))
+                .andExpect(jsonPath("$.data.item.authorId", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.item.authorName", notNullValue()))
+                .andExpect(jsonPath("$.data.item.title", notNullValue()))
+                .andExpect(jsonPath("$.data.item.body", notNullValue()));
+        /* 응답 MockHttpServletResponse
+        Body = {"resultCode":"200","msg":"성공",
+        "data":{"item":{"id":1,"createDate":"2023-12-05T22:55:08.505409",
+        "modifyDate":"2023-12-05T22:55:08.505409","authorId":1,"authorName":"관리자",
+        "title":"제목1","body":"내용1"}},"statusCode":200,"success":true,"fail":false}
+         */
+    }
 }
