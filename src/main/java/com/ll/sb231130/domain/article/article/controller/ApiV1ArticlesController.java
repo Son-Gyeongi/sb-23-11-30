@@ -149,10 +149,6 @@ public class ApiV1ArticlesController {
                 .ifPresentOrElse(
                         p -> System.out.println("로그인 : " + p.getName()), // 사용자 정보가 있다면
                         () -> System.out.println("비로그인") // 사용자 정보가 없다면
-                        /*
-                        타임리프가 아닌 경우 기본적으로는 클라이언트와의 쿠키 공유가 안되고,
-                        세션도 안되고, 스프링 시큐리티를 사용하지 못합니다. 그래서 비로그인 나온다.
-                         */
                 );
 
         RsData<Article> writeRs = articleService.write(member, body.getTitle(), body.getBody());
