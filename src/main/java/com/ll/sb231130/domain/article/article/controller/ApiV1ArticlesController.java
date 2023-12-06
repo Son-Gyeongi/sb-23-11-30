@@ -142,9 +142,7 @@ public class ApiV1ArticlesController {
         Member member = rq.getMember();
         RsData<Article> writeRs = articleService.write(member, body.getTitle(), body.getBody());
 
-        return RsData.of(
-                writeRs.getResultCode(),
-                writeRs.getMsg(),
+        return writeRs.of(
                 new WriteArticleResponseBody(writeRs.getData())
         );
     }

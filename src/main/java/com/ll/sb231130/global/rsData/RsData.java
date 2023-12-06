@@ -27,4 +27,9 @@ public class RsData<T> {
     public boolean isFail() {
         return !isSuccess();
     }
+
+    //  "of"라는 이름의 제네릭 메서드로, T 타입의 데이터를 받아들이고 RsData<T> 타입의 객체를 반환한다는 의미
+    public <T> RsData<T> of(T data) {
+        return RsData.of(resultCode, msg, data);
+    }
 }
