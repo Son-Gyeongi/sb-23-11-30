@@ -20,48 +20,59 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    //  Spring Security를 사용하여 JWT(JSON Web Token) 인증을 처리하는 필터
     private final MemberService memberService;
 
     @Override
     @SneakyThrows
+    // doFilterInternal 메서드에서 HTTP 요청을 필터링하고 JWT 인증을 처리
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
-        // 테스트할 때 쿼리스트링에서 username 쉽게 얻어오기 위해서
+        // 요청에서 "username" 파라미터를 추출합니다.
         String username = request.getParameter("username");
 
         // 어쩔 수 없이 요청에서 username 파라미터를 통해서 보낸 사람이 누군지 판단
-        if (username != null) { // username이 있다면
+        // 만약 username이 존재한다면,
+        if (username != null) {
+            // MemberService를 사용하여 해당 username을 가진 Member 엔터티를 찾습니다.
             Member member = memberService.findByUsername(username).get();
 
+            // 찾은 Member 정보를 기반으로 Spring Security의 User 객체를 생성합니다.
             User user = new User(
                     member.getUsername(),
                     member.getPassword(),
                     List.of()
             );
 
+            // 생성된 User 객체를 사용하여 Authentication 객체를 만듭니다.
+            // Authentication 객체는 Spring Security에서 현재 사용자의 인증 정보를 나타내는 객체
             Authentication auth = new UsernamePasswordAuthenticationToken(
                     user,
                     user.getPassword(),
                     user.getAuthorities()
             );
 
-            // 스프링 시큐리티 세션 정보들
+            // SecurityContextHolder를 사용하여 현재 Security Context에 Authentication 객체를 설정합니다.
             SecurityContextHolder.getContext().setAuthentication(auth);
 
+            // 다음 필터로 요청을 전달합니다.
             filterChain.doFilter(request, response);
             return;
         }
 
+        // username이 존재하지 않을 경우 기본적으로 "user1"이라는 사용자를 생성합니다.
         User user = new User("user1", "", List.of());
 
+        // 생성된 User 객체를 사용하여 Authentication 객체를 만듭니다.
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user,
                 user.getPassword(),
                 user.getAuthorities()
         );
 
-        // 스프링 시큐리티 세션 정보들
+        // SecurityContextHolder를 사용하여 현재 Security Context에 Authentication 객체를 설정합니다.
         SecurityContextHolder.getContext().setAuthentication(auth);
 
+        // 다음 필터로 요청을 전달합니다.
         filterChain.doFilter(request, response);
     }
 }
