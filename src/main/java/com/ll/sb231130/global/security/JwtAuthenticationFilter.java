@@ -30,9 +30,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // doFilterInternal 메서드에서 HTTP 요청을 필터링하고 JWT 인증을 처리
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         // 요청에서 "username" 파라미터를 추출합니다.
-        String username = request.getParameter("username");
+        String username = request.getHeader("username"); // URL 파라미터로 아이디와 비번이 넘겨지는게 마음에 안들어서 헤더를 통해 넘긴다.
         // 패스워드까지 체크하여 클라이언트가 쉽게 신원을 위조할 수 없도록 한다.
-        String password = request.getParameter("password");
+        String password = request.getHeader("password");
 
         // 어쩔 수 없이 요청에서 username 파라미터를 통해서 보낸 사람이 누군지 판단
         // 만약 username, password가 존재한다면,
