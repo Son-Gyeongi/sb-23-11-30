@@ -20,7 +20,7 @@ public class Member extends BaseEntity {
     private String email;
     private String nickname;
     @Column(unique = true) // 유니크 인덱스로 검색 속도가 빠르다.
-    @UuidGenerator(style = UuidGenerator.Style.TIME) // 만드는 시점의 시간을 포함해서 uuid를 만든다.(uuid 긴문자열)
+    @UuidGenerator(style = UuidGenerator.Style.RANDOM) // 랜덤으로 긴 문자열 만든다.
     private String apiKey;
 
     // name을 어떤 걸로 할지 여기서 정한다. nickname 또는 username

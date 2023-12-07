@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -62,5 +63,10 @@ public class MemberService {
         }
 
         return RsData.of("200", "로그인 성공", memberOp.get());
+    }
+
+    @Transactional // 값이 바뀔때는 @Transactional 사용하기
+    public void regenApiKey(Member member) {
+        member.setApiKey(UUID.randomUUID().toString());
     }
 }

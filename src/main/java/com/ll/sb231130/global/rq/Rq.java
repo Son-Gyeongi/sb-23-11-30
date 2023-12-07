@@ -31,4 +31,9 @@ public class Rq {
 
         return member;
     }
+
+    // 요청 받은 헤더에 name과 같은 이름의 값을 가져온다.
+    public String getHeader(String name) {
+        return request.getHeader(name);
+    }
 }

@@ -8,6 +8,7 @@ import com.ll.sb231130.global.rsData.RsData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -54,6 +55,20 @@ public class ApiV1MembersController {
                 "200",
                 "로그인 성공",
                 new LoginResponseBody(member)
+        );
+    }
+
+    // 전 기기 로그아웃 (새로 생성도니 apiKey가 저장된다.)
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/apiKey")
+    public RsData<?> regenApiKey() {
+        Member member = rq.getMember();
+
+        memberService.regenApiKey(member);
+
+        return RsData.of(
+                "200",
+                "해당 키가 재생성 되었습니다."
         );
     }
 }
