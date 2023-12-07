@@ -3,14 +3,16 @@ package com.ll.sb231130.domain.member.member.service;
 import com.ll.sb231130.domain.member.member.entity.Member;
 import com.ll.sb231130.domain.member.member.repository.MemberRepository;
 import com.ll.sb231130.global.rsData.RsData;
+import com.ll.sb231130.global.util.jwt.JwtUtil;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
@@ -46,8 +48,14 @@ public class MemberService {
         return memberRepository.findByUsername(username);
     }
 
+    // ApiKey 를 JwtToken 으로 교체, 아직은 토큰에 회원의 ID(번호)만 저장했기 때문에 회원정보를 얻는 쿼리가 필요
     public Optional<Member> findByApiKey(String apiKey) {
-        return memberRepository.findByApiKey(apiKey);
+        Claims claims = JwtUtil.decode(apiKey); // accessToken에 받아온 사용자 정보
+
+        Map<String, String> data = (Map<String, String>) claims.get("data"); // 현재는 id값만 있다. 저장을 id만 해서
+        long id = Long.parseLong(data.get("id")); // data에서 id 가져오기
+
+        return findById(id);
     }
 
     public RsData<Member> checkUsernameAndPassword(String username, String password) {
@@ -63,10 +71,5 @@ public class MemberService {
         }
 
         return RsData.of("200", "로그인 성공", memberOp.get());
-    }
-
-    @Transactional // 값이 바뀔때는 @Transactional 사용하기
-    public void regenApiKey(Member member) {
-        member.setApiKey(UUID.randomUUID().toString());
     }
 }

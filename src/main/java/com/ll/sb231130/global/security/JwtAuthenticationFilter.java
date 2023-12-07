@@ -11,7 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,7 +22,6 @@ import java.util.List;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     //  Spring Security를 사용하여 JWT(JSON Web Token) 인증을 처리하는 필터
     private final MemberService memberService;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     @SneakyThrows
