@@ -53,24 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // SecurityContextHolder를 사용하여 현재 Security Context에 Authentication 객체를 설정합니다.
             SecurityContextHolder.getContext().setAuthentication(auth);
-
-            // 다음 필터로 요청을 전달합니다.
-            filterChain.doFilter(request, response);
-            return;
         }
-
-        // username이 존재하지 않을 경우 기본적으로 "user1"이라는 사용자를 생성합니다.
-        User user = new User("user1", "", List.of());
-
-        // 생성된 User 객체를 사용하여 Authentication 객체를 만듭니다.
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user,
-                user.getPassword(),
-                user.getAuthorities()
-        );
-
-        // SecurityContextHolder를 사용하여 현재 Security Context에 Authentication 객체를 설정합니다.
-        SecurityContextHolder.getContext().setAuthentication(auth);
 
         // 다음 필터로 요청을 전달합니다.
         filterChain.doFilter(request, response);
