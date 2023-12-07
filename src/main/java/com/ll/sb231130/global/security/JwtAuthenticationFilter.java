@@ -30,20 +30,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // doFilterInternal 메서드에서 HTTP 요청을 필터링하고 JWT 인증을 처리
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         // 요청에서 "username" 파라미터를 추출합니다.
-        String username = request.getHeader("username"); // URL 파라미터로 아이디와 비번이 넘겨지는게 마음에 안들어서 헤더를 통해 넘긴다.
-        // 패스워드까지 체크하여 클라이언트가 쉽게 신원을 위조할 수 없도록 한다.
-        String password = request.getHeader("password");
+        String apiKey = request.getHeader("X-ApiKey");
 
         // 어쩔 수 없이 요청에서 username 파라미터를 통해서 보낸 사람이 누군지 판단
         // 만약 username, password가 존재한다면,
-        if (username != null && password != null) {
-            // MemberService를 사용하여 해당 username을 가진 Member 엔터티를 찾습니다.
-            Member member = memberService.findByUsername(username).get();
-
-            // 비밀번호 체크
-            if (!passwordEncoder.matches(password, member.getPassword())) {
-                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-            }
+        if (apiKey != null) {
+            // MemberService를 사용하여 해당 apiKey을 가진 Member 엔터티를 찾습니다.
+            Member member = memberService.findByApiKey(apiKey).get();
 
             // 찾은 Member 정보를 기반으로 Spring Security의 User 객체를 생성합니다.
             User user = new User(
