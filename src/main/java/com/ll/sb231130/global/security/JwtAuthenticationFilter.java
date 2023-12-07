@@ -33,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String apiKey = request.getHeader("X-ApiKey");
 
         // 어쩔 수 없이 요청에서 username 파라미터를 통해서 보낸 사람이 누군지 판단
-        // 만약 username, password가 존재한다면,
+        // 만약 apiKey가 존재한다면,
         if (apiKey != null) {
             // MemberService를 사용하여 해당 apiKey을 가진 Member 엔터티를 찾습니다.
             Member member = memberService.findByApiKey(apiKey).get();
