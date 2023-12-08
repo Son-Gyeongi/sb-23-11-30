@@ -24,9 +24,10 @@ public class Rq {
         if (member == null) {
             // 스프링 시큐리티 세션에서 회원정보 가져오기
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            user.getUsername();
 
-            member = memberService.findByUsername(user.getUsername()).get();
+            long memberId = Long.parseLong(user.getUsername());
+
+            member = memberService.findById(memberId).get();
         }
 
         return member;

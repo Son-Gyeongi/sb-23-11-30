@@ -4,6 +4,7 @@ import com.ll.sb231130.domain.article.article.dto.ArticleDto;
 import com.ll.sb231130.domain.article.article.entity.Article;
 import com.ll.sb231130.domain.article.article.service.ArticleService;
 import com.ll.sb231130.domain.member.member.entity.Member;
+import com.ll.sb231130.domain.member.member.service.MemberService;
 import com.ll.sb231130.global.rq.Rq;
 import com.ll.sb231130.global.rsData.RsData;
 import lombok.Getter;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/articles")
@@ -23,6 +23,7 @@ import java.util.Optional;
 public class ApiV1ArticlesController {
     private final ArticleService articleService;
     private final Rq rq;
+    private final MemberService memberService;
 
     // 각 엔드포인트 당 ResponseBody 클래스를 두는 것이 좋다.
     @Getter
@@ -144,12 +145,9 @@ public class ApiV1ArticlesController {
         // 사용자 찾기
         Member member = rq.getMember();
 
-        // Principal에 현재 사용자 정보가 들어있는지 확인
-        Optional.ofNullable(principal)
-                .ifPresentOrElse(
-                        p -> System.out.println("로그인 : " + p.getName()), // 사용자 정보가 있다면
-                        () -> System.out.println("비로그인") // 사용자 정보가 없다면
-                );
+        // 게시물 저장시 쿼리를 1개 줄이기 위해,
+        // 영속성 컨텍스트 공유가 안되서 실패(JwtFilter에서 id 조회하는 거랑 아래 쿼리랑 같지만 다른 조회로 인식함)
+        member = memberService.findById(2L).get();
 
         RsData<Article> writeRs = articleService.write(member, body.getTitle(), body.getBody());
 

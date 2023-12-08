@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 찾은 Member 정보를 기반으로 Spring Security의 User 객체를 생성합니다.
             User user = new User(
-                    member.getUsername(),
+                    String.valueOf(member.getId()), // username이 아닌 id를 넣는다.
                     member.getPassword(),
                     List.of()
             );
