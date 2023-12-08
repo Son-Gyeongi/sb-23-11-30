@@ -3,7 +3,6 @@ package com.ll.sb231130.global.security;
 import com.ll.sb231130.domain.member.member.entity.Member;
 import com.ll.sb231130.domain.member.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,8 +20,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberService.findByUsername(username).get();
 
-        return new User(
-                member.getId() + "",
+        return new SecurityUser(
+                member.getId(),
+                member.getUsername() + "",
                 member.getPassword(),
                 member.getAuthorities()
         );

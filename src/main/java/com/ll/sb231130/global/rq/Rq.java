@@ -2,12 +2,12 @@ package com.ll.sb231130.global.rq;
 
 import com.ll.sb231130.domain.member.member.entity.Member;
 import com.ll.sb231130.domain.member.member.service.MemberService;
+import com.ll.sb231130.global.security.SecurityUser;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
@@ -26,10 +26,10 @@ public class Rq {
     public Member getMember() {
         if (member == null) {
             // Spring Security의 인증 객체에서 현재 사용자의 정보를 가져옵니다.
-            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            SecurityUser user = (SecurityUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             // 사용자 아이디를 추출하고, 해당 아이디로 회원 정보를 데이터베이스에서 가져옵니다.
-            long memberId = Long.parseLong(user.getUsername());
+            long memberId = user.getId();
 
             // getReference 메서드는 지연 로딩(Lazy Loading)을 통해 성능을 최적화하는 데 도움
             // member는 프록시 객체, 프록시는 실제 엔터티의 데이터가 필요할 때 데이터베이스에서 로드

@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 만약 apiKey가 존재한다면,
         if (apiKey != null) {
             // MemberService를 사용하여 해당 apiKey을 가진 User 객체를 찾습니다.
-            User user = memberService.getUserFromApiKey(apiKey);
+            SecurityUser user = memberService.getUserFromApiKey(apiKey);
 
             // 생성된 User 객체를 사용하여 Authentication 객체를 만듭니다.
             // Authentication 객체는 Spring Security에서 현재 사용자의 인증 정보를 나타내는 객체

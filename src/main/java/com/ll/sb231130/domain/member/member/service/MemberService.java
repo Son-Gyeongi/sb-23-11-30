@@ -3,12 +3,12 @@ package com.ll.sb231130.domain.member.member.service;
 import com.ll.sb231130.domain.member.member.entity.Member;
 import com.ll.sb231130.domain.member.member.repository.MemberRepository;
 import com.ll.sb231130.global.rsData.RsData;
+import com.ll.sb231130.global.security.SecurityUser;
 import com.ll.sb231130.global.util.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,14 +53,15 @@ public class MemberService {
     }
 
     // 주어진 API 키를 사용하여 사용자 정보를 가져오는 메서드
-    public User getUserFromApiKey(String apiKey) { // 여기서 apiKey는 JwtToken이다.
+    public SecurityUser getUserFromApiKey(String apiKey) { // 여기서 apiKey는 JwtToken이다.
         // 주어진 API 키를 복호화하여 클레임(클레임 선언) 객체를 얻습니다.
         Claims claims = JwtUtil.decode(apiKey); // accessToken에 받아온 사용자 정보
 
         // 클레임에서 'data' 키에 해당하는 맵을 추출합니다.
         Map<String, Object> data = (Map<String, Object>) claims.get("data");
         // 맵에서 'id' 키에 해당하는 값을 가져옵니다.
-        String id = (String) data.get("id"); // data에서 id 가져오기
+        long id = Long.parseLong((String) data.get("id")); // data에서 id 가져오기
+        String username = (String) data.get("username"); // data에서 username 가져오기
         // 맵에서 'authorities' 키에 해당하는 값, 즉 권한 목록을 가져와서
         // SimpleGrantedAuthority 객체로 매핑한 후 리스트로 변환합니다.
         List<? extends GrantedAuthority> authorities =
@@ -70,8 +71,9 @@ public class MemberService {
                         .toList();
 
         // 위에서 추출한 사용자 정보를 사용하여 Spring Security의 User 객체를 생성하여 반환합니다.
-        return new User(
+        return new SecurityUser(
                 id,
+                username,
                 "",
                 authorities
         );

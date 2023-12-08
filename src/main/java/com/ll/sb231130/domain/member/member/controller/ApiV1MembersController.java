@@ -58,6 +58,7 @@ public class ApiV1MembersController {
         String accessToken = JwtUtil.encode(
                 Map.of(
                         "id", id.toString(),
+                "username", member.getUsername(),
                 "authorities", member.getAuthoritiesAsStrList())); // id, 권한 정보로 accessToken 만든다.
 
         return RsData.of(
