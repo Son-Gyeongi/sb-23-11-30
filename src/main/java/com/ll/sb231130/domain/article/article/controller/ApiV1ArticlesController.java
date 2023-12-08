@@ -10,9 +10,9 @@ import com.ll.sb231130.global.rsData.RsData;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -139,15 +139,11 @@ public class ApiV1ArticlesController {
     }
 
     // 게시글 작성
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("")
-    public RsData<WriteArticleResponseBody> writeArticle(@RequestBody WriteArticleRequestBody body,
-                                                         Principal principal) {
+    public RsData<WriteArticleResponseBody> writeArticle(@RequestBody WriteArticleRequestBody body) {
         // 사용자 찾기
         Member member = rq.getMember();
-
-        // 게시물 저장시 쿼리를 1개 줄이기 위해,
-        // 영속성 컨텍스트 공유가 안되서 실패(JwtFilter에서 id 조회하는 거랑 아래 쿼리랑 같지만 다른 조회로 인식함)
-        member = memberService.findById(2L).get();
 
         RsData<Article> writeRs = articleService.write(member, body.getTitle(), body.getBody());
 

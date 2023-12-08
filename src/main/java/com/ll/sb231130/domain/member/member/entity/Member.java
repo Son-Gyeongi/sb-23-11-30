@@ -28,6 +28,7 @@ public class Member extends BaseEntity {
     }
 
     // 사용자의 권한 목록을 Spring Security의 GrantedAuthority 타입으로 변환하여 반환하는 메서드입니다.
+    @SuppressWarnings("JpaAttributeTypeInspection") // 무시해도 되는 오류를 끌 수 있다.
     public List<? extends GrantedAuthority> getAuthorities() {
         // 아래의 getAuthoritiesAsStrList() 메서드를 호출하여 문자열 형태의 권한 목록을 가져온 후,
         // 각 권한을 SimpleGrantedAuthority 객체로 매핑하고 리스트로 변환하여 반환합니다.
@@ -46,6 +47,7 @@ public class Member extends BaseEntity {
      */
 
     // 문자열 형태의 권한 목록을 가져오는 메서드입니다.
+    @SuppressWarnings("JpaAttributeTypeInspection") // 무시해도 되는 오류를 끌 수 있다.
     public List<String> getAuthoritiesAsStrList() {
         // 단순히 "ROLE_MEMBER"라는 권한을 포함한 리스트를 생성하여 반환합니다.
         return List.of("ROLE_MEMBER");

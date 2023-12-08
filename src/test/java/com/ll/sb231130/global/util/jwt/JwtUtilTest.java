@@ -11,7 +11,7 @@ class JwtUtilTest {
     @Test
     @DisplayName("t1")
     void t1() {
-        Map<String, String> data = Map.of("name", "홍길동",
+        Map<String, Object> data = Map.of("name", "홍길동",
                                             "age", "22");
 
         String jwtToken = JwtUtil.encode(data);
