@@ -13,7 +13,7 @@ public class JwtUtil {
     public static final String SECRET_KEY = "abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz1234567890";
 
     // Map<String, String> 형태의 데이터를 받아서 JWT 토큰을 생성하는 메서드
-    public static String encode(Map<String, String> data) {
+    public static String encode(Map<String, Object> data) {
         // JWT의 클레임(claim) 정보를 설정하기 위한 객체 생성
         Claims claims = Jwts
                 .claims()

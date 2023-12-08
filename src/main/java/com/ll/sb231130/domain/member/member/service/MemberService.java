@@ -6,11 +6,15 @@ import com.ll.sb231130.global.rsData.RsData;
 import com.ll.sb231130.global.util.jwt.JwtUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,14 +52,29 @@ public class MemberService {
         return memberRepository.findByUsername(username);
     }
 
-    // ApiKey 를 JwtToken 으로 교체, 아직은 토큰에 회원의 ID(번호)만 저장했기 때문에 회원정보를 얻는 쿼리가 필요
-    public Optional<Member> findByApiKey(String apiKey) {
+    // 주어진 API 키를 사용하여 사용자 정보를 가져오는 메서드
+    public User getUserFromApiKey(String apiKey) { // 여기서 apiKey는 JwtToken이다.
+        // 주어진 API 키를 복호화하여 클레임(클레임 선언) 객체를 얻습니다.
         Claims claims = JwtUtil.decode(apiKey); // accessToken에 받아온 사용자 정보
 
-        Map<String, String> data = (Map<String, String>) claims.get("data"); // 현재는 id값만 있다. 저장을 id만 해서
-        long id = Long.parseLong(data.get("id")); // data에서 id 가져오기
+        // 클레임에서 'data' 키에 해당하는 맵을 추출합니다.
+        Map<String, Object> data = (Map<String, Object>) claims.get("data");
+        // 맵에서 'id' 키에 해당하는 값을 가져옵니다.
+        String id = (String) data.get("id"); // data에서 id 가져오기
+        // 맵에서 'authorities' 키에 해당하는 값, 즉 권한 목록을 가져와서
+        // SimpleGrantedAuthority 객체로 매핑한 후 리스트로 변환합니다.
+        List<? extends GrantedAuthority> authorities =
+                ((List<String>) data.get("authorities"))
+                        .stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
 
-        return findById(id);
+        // 위에서 추출한 사용자 정보를 사용하여 Spring Security의 User 객체를 생성하여 반환합니다.
+        return new User(
+                id,
+                "",
+                authorities
+        );
     }
 
     public RsData<Member> checkUsernameAndPassword(String username, String password) {

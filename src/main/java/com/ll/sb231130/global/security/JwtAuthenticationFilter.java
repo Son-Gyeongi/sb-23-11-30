@@ -1,6 +1,5 @@
 package com.ll.sb231130.global.security;
 
-import com.ll.sb231130.domain.member.member.entity.Member;
 import com.ll.sb231130.domain.member.member.service.MemberService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +12,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.util.List;
 
 // 모든 api 요청(/api/**)이 처리되기전에 작동하는 필터 JwtAuthenticationFilter 도입
 @Component
@@ -33,15 +30,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 어쩔 수 없이 요청에서 username 파라미터를 통해서 보낸 사람이 누군지 판단
         // 만약 apiKey가 존재한다면,
         if (apiKey != null) {
-            // MemberService를 사용하여 해당 apiKey을 가진 Member 엔터티를 찾습니다.
-            Member member = memberService.findByApiKey(apiKey).get();
-
-            // 찾은 Member 정보를 기반으로 Spring Security의 User 객체를 생성합니다.
-            User user = new User(
-                    String.valueOf(member.getId()), // username이 아닌 id를 넣는다.
-                    member.getPassword(),
-                    List.of()
-            );
+            // MemberService를 사용하여 해당 apiKey을 가진 User 객체를 찾습니다.
+            User user = memberService.getUserFromApiKey(apiKey);
 
             // 생성된 User 객체를 사용하여 Authentication 객체를 만듭니다.
             // Authentication 객체는 Spring Security에서 현재 사용자의 인증 정보를 나타내는 객체
