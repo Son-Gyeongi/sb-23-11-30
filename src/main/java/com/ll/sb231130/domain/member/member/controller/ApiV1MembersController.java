@@ -56,6 +56,7 @@ public class ApiV1MembersController {
 
         Long id = member.getId();
         String accessToken = JwtUtil.encode(
+                60 * 60 * 24 * 365, //(초), 1년, 60초 60분 24시간 365일, 토큰의 유효 기간
                 Map.of(
                         "id", id.toString(),
                 "username", member.getUsername(),

@@ -14,7 +14,7 @@ class JwtUtilTest {
         Map<String, Object> data = Map.of("name", "홍길동",
                                             "age", "22");
 
-        String jwtToken = JwtUtil.encode(data);
+        String jwtToken = JwtUtil.encode(60, data); // 60초
 
         System.out.println(jwtToken);
 
