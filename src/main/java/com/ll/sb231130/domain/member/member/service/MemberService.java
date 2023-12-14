@@ -93,4 +93,9 @@ public class MemberService {
 
         return RsData.of("200", "로그인 성공", memberOp.get());
     }
+
+    @Transactional
+    public void setRefreshToken(Member member, String refreshToken) {
+        member.setRefreshToken(refreshToken);
+    }
 }

@@ -21,6 +21,7 @@ public class Member extends BaseEntity {
     private String password;
     private String email;
     private String nickname;
+    private String refreshToken;
 
     // name을 어떤 걸로 할지 여기서 정한다. nickname 또는 username
     public String getName() {

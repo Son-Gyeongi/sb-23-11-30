@@ -37,10 +37,12 @@ public class ApiV1MembersController {
     public static class LoginResponseBody {
         private final MemberDto item;
         private final String accessToken;
+        private final String refreshToken;
 
-        public LoginResponseBody(Member member, String accessToken) {
+        public LoginResponseBody(Member member, String accessToken, String refreshToken) {
             item = new MemberDto(member);
             this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
         }
     }
 
@@ -56,16 +58,25 @@ public class ApiV1MembersController {
 
         Long id = member.getId();
         String accessToken = JwtUtil.encode(
-                60 * 60 * 24 * 365, //(초), 1년, 60초 60분 24시간 365일, 토큰의 유효 기간
+                60 * 10, //(초), 10분
+//                60 * 60 * 24 * 365 //(초), 1년, 60초 60분 24시간 365일, 토큰의 유효 기간
                 Map.of(
                         "id", id.toString(),
                 "username", member.getUsername(),
                 "authorities", member.getAuthoritiesAsStrList())); // id, 권한 정보로 accessToken 만든다.
 
+        String refreshToken = JwtUtil.encode(
+                60 * 60 * 24 * 365, //(초), 1년, 60초 60분 24시간 365일, 토큰의 유효 기간
+                Map.of(
+                        "id", id.toString(),
+                        "username", member.getUsername()));
+
+        memberService.setRefreshToken(member, refreshToken);
+
         return RsData.of(
                 "200",
                 "로그인 성공",
-                new LoginResponseBody(member, accessToken)
+                new LoginResponseBody(member, accessToken, refreshToken)
         );
     }
 }
