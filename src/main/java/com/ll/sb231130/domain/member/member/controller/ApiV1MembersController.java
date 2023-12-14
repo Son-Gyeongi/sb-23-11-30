@@ -79,4 +79,45 @@ public class ApiV1MembersController {
                 new LoginResponseBody(member, accessToken, refreshToken)
         );
     }
+
+    @Getter
+    @Setter
+    public static class RefreshAccessTokenRequestBody {
+        private String refreshToken;
+    }
+
+    @Getter
+    public static class RefreshAccessTokenResponseBody {
+        private final String accessToken;
+
+        public RefreshAccessTokenResponseBody(String accessToken) {
+            this.accessToken = accessToken;
+        }
+    }
+
+    // refreshToken 으로 엑세스토큰 재발급, 프론트엔드 개발자가 매 요청마다 엑세스토큰 만료에 대한 대비를 해야한다.
+    @PostMapping("/refreshAccessToken")
+    public RsData<RefreshAccessTokenResponseBody> login(
+            @RequestBody RefreshAccessTokenRequestBody requestBody
+    ) {
+        String refreshToken = requestBody.getRefreshToken();
+
+        Member member = memberService.findByRefreshToken(refreshToken).get();
+
+        Long id = member.getId();
+        String accessToken = JwtUtil.encode(
+                60 * 10, // 10분
+                Map.of(
+                        "id", id.toString(),
+                        "username", member.getUsername(),
+                        "authorities", member.getAuthoritiesAsStrList()
+                )
+        );
+
+        return RsData.of(
+                "200",
+                "엑세스 토큰 재발급 성공",
+                new RefreshAccessTokenResponseBody(accessToken)
+        );
+    }
 }
