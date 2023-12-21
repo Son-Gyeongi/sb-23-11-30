@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig { // 타임리프를 위한 설정은 SecurityConfig
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
