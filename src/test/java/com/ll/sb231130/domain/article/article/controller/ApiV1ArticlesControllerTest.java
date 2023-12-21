@@ -47,11 +47,11 @@ class ApiV1ArticlesControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(handler().handlerType(ApiV1ArticlesController.class))
                 .andExpect(handler().methodName("getArticles"))
-                .andExpect(jsonPath("$.data.items[0].id", instanceOf(Number.class)))
+                .andExpect(jsonPath("$.data.items[0].id", instanceOf(Number.class))) // 숫자인지 아닌지
                 .andExpect(jsonPath("$.data.items[0].createDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.items[0].modifyDate", matchesPattern(DATE_PATTERN)))
                 .andExpect(jsonPath("$.data.items[0].authorId", instanceOf(Number.class)))
-                .andExpect(jsonPath("$.data.items[0].authorName", notNullValue()))
+                .andExpect(jsonPath("$.data.items[0].authorName", notNullValue())) // 널이 아니다.
                 .andExpect(jsonPath("$.data.items[0].title", notNullValue()))
                 .andExpect(jsonPath("$.data.items[0].body", notNullValue()));
         /* 응답 MockHttpServletResponse
