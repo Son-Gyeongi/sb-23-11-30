@@ -149,6 +149,8 @@ class ApiV1ArticlesControllerTest {
                 .andExpect(jsonPath("$.data.item.authorName", notNullValue()))
                 .andExpect(jsonPath("$.data.item.title", is("제목1-수정")))
                 .andExpect(jsonPath("$.data.item.body", is("내용1-수정")));
+//        is() 메서드는 Hamcrest에서 제공하는 기본 매처 중 하나로, 값을 비교할 때 사용
+//        문장이 자연스럽게 읽히기 때문에 테스트 코드가 좀 더 이해하기 쉬워짐
     }
 
     // 게시글 작성
