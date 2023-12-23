@@ -147,6 +147,8 @@ public class ApiV1ArticlesController {
 
         RsData<Article> writeRs = articleService.write(member, body.getTitle(), body.getBody());
 
+        // writeRs의 resultCodel랑 state랑 다 재활용하면서
+        // 데이터만 new WriteArticleResponseBody(writeRs.getData())로 바뀌어진 게 새로 나간다.
         return writeRs.of(
                 new WriteArticleResponseBody(writeRs.getData())
         );
